@@ -3,16 +3,16 @@
 const allcardsData= async()=>{
     const url =`https://openapi.programming-hero.com/api/ai/tools`
     const res = await fetch(url);
-    const datam =await res.json(res);
-    displayAllcardsData(datam.data.tools)
+    const datum =await res.json(res);
+    displayAllcardsData(datum.data.tools)
 
 }
 
 // all card data display
-const displayAllcardsData= (datam)=>{
+const displayAllcardsData= (datum)=>{
     const getCardsDiv = document.getElementById("cards");
-    datam.forEach(element => {
-        console.log(element)
+    datum.forEach(element => {
+        console.log(element.id)
         const createDiv = document.createElement('div');
         createDiv.classList.add('col');
         createDiv.innerHTML=`
@@ -39,7 +39,7 @@ const displayAllcardsData= (datam)=>{
 
 
     <div>
-    <img src="./deatils-icon.png" alt="" srcset="" class="">
+    <img onclick="singleDetailsdata('${element.id}')"  src="./deatils-icon.png" alt="" srcset="" class="">
     </div>
 </section>  
       </div>
@@ -50,4 +50,15 @@ const displayAllcardsData= (datam)=>{
     
 }
 
+// deatils icon dingle data fetch
+const singleDetailsdata =async(id)=>{
+    const url =`https://openapi.programming-hero.com/api/ai/tool/${id}`
+    const res = await fetch(url);
+    const datum =await res.json(res);
+    displaysingleDetailsdata(datum.data)
+}
 
+// deatils icon dingle data display
+const displaysingleDetailsdata=(data)=>{
+console.log(data)
+}
