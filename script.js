@@ -10,13 +10,12 @@ const allcardsData= async(max)=>{
 
 // all card data display
 const displayAllcardsData= (datum,max)=>{
- 
+  toggleSpinner(true)
  
     const getCardsDiv = document.getElementById("cards");
     getCardsDiv.innerHTML ="";
-    if(max===6){
-datum = datum;
-
+    if(max===5){
+   datum = datum;
     }
    else if(datum.length>6){
       datum = datum.slice(0,6)
@@ -63,7 +62,7 @@ datum = datum;
         `
         getCardsDiv.appendChild(createDiv)
     });
-    
+    toggleSpinner(false)
 }
 
 // deatils icon single data fetch
@@ -77,14 +76,16 @@ const singleDetailsdata =async(id)=>{
 
 // deatils icon single data display
 const displaysingleDetailsdata=(data)=>{
+  console.log(data.features)
   const modalSection = document.getElementById('modal-body');
+  modalSection.innerHTML=""
 modalSection.innerHTML+=`
 <div class="modal-header">
 <h5 class="modal-title" id="detailsModalLabel">${data.tool_name}</h5>
 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 
-<div id="modal-body" class="modal-body row row-cols-1 row-cols-md-2 g-4">
+<div   class="modal-body row row-cols-1 row-cols-md-2 g-4">
 
 <div class="col-6">
 <h6 id="modal-intro" ></h6>
@@ -100,9 +101,9 @@ modalSection.innerHTML+=`
 <div>
 <h4>Features</h4>
 <ul>
-<li id="features1" ></li>
-<li id="features2" >Multilingual support</li>
-<li id="features3" >Seamless integration</li>
+<li id="features1" >${data}</li>
+<li id="features2" >${data}</li>
+<li id="features3" >${data}</li>
 </ul>
 </div>
 
@@ -130,7 +131,6 @@ modalSection.innerHTML+=`
 <div class="modal-footer">
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 </div>
-
 `
 
 
@@ -146,11 +146,17 @@ modalSection.innerHTML+=`
 
 
   
-// console.log(data.tool_name)
+
 }
 
 function showAll(max){
 document.getElementById("show-all-button").classList.add('d-none');
-const showAllbutton = document.getElementById('show-all-button');
 allcardsData(max)
+}
+
+const toggleSpinner = isLoading => {
+  const spinnerSec = document.getElementById('spinner');
+  if (isLoading) {
+      spinnerSec.classList.add('d-none')
+  }
 }

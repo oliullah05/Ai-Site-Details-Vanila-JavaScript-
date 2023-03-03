@@ -21,6 +21,15 @@
    </header>
   <!-- header section ends -->
 
+<!-- Spinner start-->
+<section class="">
+  <div id="spinner" style="height: 50vh;" class="d-flex justify-content-center align-items-center">
+      <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+      </div>
+  </div>
+</section>
+<!-- Spinner End -->
 
   <!-- Cards section starts -->
   <section class="cards m-3">
@@ -34,7 +43,7 @@
   </section>
 <!-- Cards section ends-->
 <section id="show-all-button" class="show-all d-flex justify-content-center align-items-center d-none">
-  <button onclick="showAll(6)" class="btn btn-primary">Show All</button>
+  <button onclick="showAll(5)" class="btn btn-primary">Show All</button>
 </section>
 
 
@@ -48,13 +57,13 @@
   <section >
     <div class="modal fade " id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
       <div class="modal-dialog  modal-dialog-centered modal-lg" role="document">
-        <div  id="modal-body" class="modal-content ">
-          <!-- <div class="modal-header">
+        <div id="modal-body" class="modal-content ">
+          <div class="modal-header">
             <h5 class="modal-title" id="detailsModalLabel">Modal title</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           
-          <div class="modal-body row row-cols-1 row-cols-md-2 g-4">
+          <div   class="modal-body row row-cols-1 row-cols-md-2 g-4">
            
        <div class="col-6">
         <h6 id="modal-intro" ></h6>
@@ -99,7 +108,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>
