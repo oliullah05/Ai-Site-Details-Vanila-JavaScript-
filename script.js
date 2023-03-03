@@ -39,7 +39,10 @@ const displayAllcardsData= (datum)=>{
 
 
     <div>
+    <button type="" class="" data-bs-toggle="modal" data-bs-target="#detailsModal">
     <img onclick="singleDetailsdata('${element.id}')"  src="./deatils-icon.png" alt="" srcset="" class="">
+  </button>
+    
     </div>
 </section>  
       </div>
@@ -50,7 +53,7 @@ const displayAllcardsData= (datum)=>{
     
 }
 
-// deatils icon dingle data fetch
+// deatils icon single data fetch
 const singleDetailsdata =async(id)=>{
     const url =`https://openapi.programming-hero.com/api/ai/tool/${id}`
     const res = await fetch(url);
@@ -58,7 +61,7 @@ const singleDetailsdata =async(id)=>{
     displaysingleDetailsdata(datum.data)
 }
 
-// deatils icon dingle data display
+// deatils icon single data display
 const displaysingleDetailsdata=(data)=>{
 console.log(data)
 }
