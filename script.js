@@ -1,46 +1,46 @@
-const apiDataLoad = async (dataLimit) => {
-    const URL = 'https://openapi.programming-hero.com/api/ai/tools'
-    const res = await fetch(URL);
-    const data = await res.json();
-    displayApiDataLoad(data.data.tools, dataLimit)
+
+const apiDataLoad = dataLimit => {
+    const url = 'https://openapi.programming-hero.com/api/ai/tools'
+    fetch(url)
+        .then(res => res.json())
+        .then(data => displayApiDataLoad(data.data.tools, dataLimit))
+
 }
 
 
-
-
-const displayApiDataLoad = (tools, dataLimit) => {
+const displayApiDataLoad = (data, dataLimit) => {
     Spinner(true)
 
     const showMoreContainer = document.getElementById('show-more')
-    if (dataLimit !== 6 && tools.length > 6) {
-        tools = tools.slice(0, 6)
+    if (dataLimit !== 6 && data.length > 6) {
+        data = data.slice(0, 6)
         showMoreContainer.classList.remove('d-none')
     }
     else {
         showMoreContainer.classList.add('d-none')
     }
 
-    const toolsContainer = document.getElementById('cards-container')
-    toolsContainer.innerHTML = '';
-    tools.forEach(tool => {
-        // console.log(tool)
-        toolsContainer.innerHTML += `
+    const cardsSection = document.getElementById('cards-container')
+    cardsSection.innerHTML = '';
+    data.forEach(card => {
+
+        cardsSection.innerHTML += `
         <div class="col">
         <div class="card h-100 p-2 shadow border-0">
-            <img src="${tool.image}" class="card-img-top img-fluid img-thumbnail h-50" alt="">
+            <img src="${card.image}" class="card-img-top img-fluid img-thumbnail h-50" alt="">
             <div class="card-body">
                 <h5 class="card-title">Features</h5>
-                <ol class="list-group p-3">${tool.features.map(list => `<li>${list}</li>`).join('')}</ol>
+                <ol class="list-group p-3">${card.features.map(list => `<li>${list}</li>`).join('')}</ol>
                 <hr>
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h5 class="card-title">${tool.name}</h5>
+                        <h5 class="card-title">${card.name}</h5>
                         <div class="d-flex gap-2  align-items-center">
                             <img src="Vector.png"</img>
-                            <p class="card-text">${tool.published_in}</p>
+                            <p class="card-text">${card.published_in}</p>
                         </div>
                     </div>
-                    <div onclick ="apiDetailsDataLoad('${tool.id}')" style="width: 50px;" data-bs-toggle="modal" data-bs-target="#detailsModal"><img src="deatils-icon.png"</img></div>
+                    <div onclick ="apiDetailsDataLoad('${card.id}')" style="width: 50px;" data-bs-toggle="modal" data-bs-target="#detailsModal"><img src="deatils-icon.png"</img></div>
                 </div>
             </div>
         </div>
@@ -65,24 +65,25 @@ const Spinner = loading => {
 
 
 const apiDetailsDataLoad = async (id) => {
-    const URL = `https://openapi.programming-hero.com/api/ai/tool/${id}`
-    const res = await fetch(URL);
-    const data = await res.json();
-    displayApiDetailsDataLoad(data.data)
+    const url = `https://openapi.programming-hero.com/api/ai/tool/${id}`
+    fetch(url)
+        .then(res => res.json())
+        .then(data => displayApiDetailsDataLoad(data.data))
+
 }
 
 
-const displayApiDetailsDataLoad = (tool) => {
-    // console.log(tool)
-    const featuresValues = Object.values(tool.features)
+const displayApiDetailsDataLoad = (modalData) => {
+   
+    const featuresValues = Object.values(modalData.features)
     let featuresArray = []
     for (const featuresValue of featuresValues) {
         featuresArray.push(featuresValue.feature_name)
     }
-    const accuracyFixer = '% Accuracy';
-    const { description, pricing, image_link, input_output_examples, accuracy, integrations } = tool
-    const toolsModalBody = document.getElementById('modal-body');
-    toolsModalBody.innerHTML = `
+    const accuracyString = "% Accuracy";
+    const { description, pricing, image_link, input_output_examples, accuracy, integrations } = modalData
+    const modalBody = document.getElementById('modal-body');
+    modalBody.innerHTML = `
     <div class="row row-cols-1 row-cols-md-2 g-4">
     <div class="col">
         <div class="card bg-info border-0 shadow-lg bg-opacity-25 h-100">
@@ -109,7 +110,7 @@ const displayApiDetailsDataLoad = (tool) => {
     </div>
     <div class="col">
         <div class="card text-center shadow-lg border-0 ">
-            <div><span class="badge text-bg-danger w-30 p-2 position-absolute end-0">${accuracy.score ? accuracy.score * 100 + accuracyFixer : ''}</span>
+            <div><span class="badge text-bg-danger w-30 p-2 position-absolute end-0">${accuracy.score ? accuracy.score * 100 + accuracyString : ''}</span>
             <img src="${image_link[0]}" class="card-img-top" alt=""></div>
             <div class="card-body my-5">
                 <h5 class="card-title">${input_output_examples ? input_output_examples[0].input : 'Can you give any example?'}</h5>
@@ -122,9 +123,9 @@ const displayApiDetailsDataLoad = (tool) => {
 };
 
 
-const showMoreButton =document.getElementById('btn-show-more');
+const showMoreButton = document.getElementById('btn-show-more');
 showMoreButton.addEventListener('click', function () {
-    processLoad()
+    showAllFunction()
 })
 
 
@@ -140,7 +141,7 @@ const sortByDate = async (dataLimit) => {
 }
 
 
-const processLoad = (dataLimit = 6) => {
+const showAllFunction = (dataLimit = 6) => {
     apiDataLoad(dataLimit)
     sortByDate(dataLimit)
 }
