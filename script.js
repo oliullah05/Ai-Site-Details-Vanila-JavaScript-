@@ -1,162 +1,138 @@
-
-// all cards data fetch
-const allcardsData= async(max)=>{
-    const url =`https://openapi.programming-hero.com/api/ai/tools`
-    const res = await fetch(url);
-    const datum =await res.json(res);
-    displayAllcardsData(datum.data.tools,max)
-
+const loadTools = async (dataLimit) => {
+    const URL = 'https://openapi.programming-hero.com/api/ai/tools'
+    const res = await fetch(URL);
+    const data = await res.json();
+    displayTools(data.data.tools, dataLimit)
 }
 
-// all card data display
-const displayAllcardsData= (datum,max)=>{
-  toggleSpinner(true)
- 
-    const getCardsDiv = document.getElementById("cards");
-    getCardsDiv.innerHTML ="";
-    if(max===5){
-   datum = datum;
-    }
-   else if(datum.length>6){
-      datum = datum.slice(0,6)
-      document.getElementById("show-all-button").classList.remove('d-none')
-    }
-    // console.log(datum)
 
-    datum.forEach(element => {
-        // console.log(element.id)
-        const createDiv = document.createElement('div');
-        createDiv.classList.add('col');
-        createDiv.innerHTML=`
-        
-        <div class="card h-100">
-        <img src="${element.image}" class="card-img-top h-50 img-fluid" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Features</h5>
-          <ol class="list-group list-group-numbered pb-3">
-            <li class="">${element.features[0]?element.features[0]:"no data found"}</li>
-            <li class="">${element.features[1]?element.features[1]:"no data found"}</li>
-            <li class="">${element.features[2]?element.features[2]:"no data found"}</li>
-          </ol>
-          <hr>
-           
-
-          
-          <h2>${element.name}</h2>
-<section class="d-flex justify-content-between">
-        <div class="d-flex justify-content-start align-item-center gap-2">
-        <img src="./Vector.png" alt="" srcset="" class="p-0 m-0 h-50 ">
-        <p>${element.published_in}</p>
-    </div>
-
-
-    <div>
-    <button type="" class="" data-bs-toggle="modal" data-bs-target="#detailsModal">
-    <img onclick="singleDetailsdata('${element.id}')"  src="./deatils-icon.png" alt="" srcset="" class="">
-  </button>
-    
-    </div>
-</section>  
-      </div>
-        
-        `
-        getCardsDiv.appendChild(createDiv)
+const sortByDate = async (dataLimit) => {
+    const URL = 'https://openapi.programming-hero.com/api/ai/tools'
+    const res = await fetch(URL);
+    const data = await res.json();
+    const sortData = data.data.tools.sort(function (a, b) {
+        return new Date(a.published_in) - new Date(b.published_in)
     });
+    displayTools(sortData, dataLimit)
+}
+
+
+const processLoad = (dataLimit = 6) => {
+    loadTools(dataLimit)
+    sortByDate(dataLimit)
+}
+
+
+const displayTools = (tools, dataLimit) => {
+    toggleSpinner(true)
+
+    const showMoreContainer = document.getElementById('show-more')
+    if (dataLimit !== 6 && tools.length > 6) {
+        tools = tools.slice(0, 6)
+        showMoreContainer.classList.remove('d-none')
+    }
+    else {
+        showMoreContainer.classList.add('d-none')
+    }
+
+    const toolsContainer = document.getElementById('tools-container')
+    toolsContainer.innerHTML = '';
+    tools.forEach(tool => {
+        // console.log(tool)
+        toolsContainer.innerHTML += `
+        <div class="col">
+        <div class="card h-100 p-2 shadow border-0">
+            <img src="${tool.image}" class="card-img-top img-fluid img-thumbnail h-50" alt="">
+            <div class="card-body">
+                <h5 class="card-title">Features</h5>
+                <ol class="list-group p-3">${tool.features.map(list => `<li>${list}</li>`).join('')}</ol>
+                <hr>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">${tool.name}</h5>
+                        <div class="d-flex gap-2  align-items-center">
+                            <img src="Vector.png"</img>
+                            <p class="card-text">${tool.published_in}</p>
+                        </div>
+                    </div>
+                    <div onclick ="loadToolsDetails('${tool.id}')" style="width: 50px;" data-bs-toggle="modal" data-bs-target="#exampleModal"><img src="deatils-icon.png"</img></div>
+                </div>
+            </div>
+        </div>
+    </div>
+        `
+    });
+
     toggleSpinner(false)
 }
 
-// deatils icon single data fetch
-const singleDetailsdata =async(id)=>{
-    const url =`https://openapi.programming-hero.com/api/ai/tool/${id}`
-    // console.log(url)
-    const res = await fetch(url);
-    const datum =await res.json(res);
-    displaysingleDetailsdata(datum.data)
-}
-
-// deatils icon single data display
-const displaysingleDetailsdata=(data)=>{
-  console.log(data.features)
-  const modalSection = document.getElementById('modal-body');
-  modalSection.innerHTML=""
-modalSection.innerHTML+=`
-<div class="modal-header">
-<h5 class="modal-title" id="detailsModalLabel">${data.tool_name}</h5>
-<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-
-<div   class="modal-body row row-cols-1 row-cols-md-2 g-4">
-
-<div class="col-6">
-<h6 id="modal-intro" ></h6>
-
-<div class="d-flex  align-items-center gap-2 fw-semibold text-center p-2">
-<div class="bg-light rounded-2 text-success p-4"><span>$10/<br>month<br>Basic</span></div>
-<div  class="bg-light rounded-2 text-warning p-4"><span>$10/<br>month<br>Basic</span></div>
-<div class="bg-light rounded-2 text-danger p-4"><span>$10/<br>month<br>Basic</span></div>
-</div>
-
-
-<div class="d-flex gap-2">
-<div>
-<h4>Features</h4>
-<ul>
-<li id="features1" >${data}</li>
-<li id="features2" >${data}</li>
-<li id="features3" >${data}</li>
-</ul>
-</div>
-
-<div>
-<h4>Integrations</h4>
-<ul>
-<li>FB Messenger</li>
-<li>Slack</li>
-<li>Telegram</li>
-</ul>
-</div>
-</div>
-
-
-
-</div>
-<div class="col-6">
-<img src="" alt="" srcset="">
-<p id="accuracy" class="p-2 text-white bg-danger w-50 border border-3">94% accuracy</p>
-<h3>Hi, how are you doing today?</h3>
-<p>I'm doing well, thank you for asking. How can I assist you today?</p>
-</div>
-
-</div>
-<div class="modal-footer">
-<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-</div>
-`
-
-
-
-
-// const modalTitle = document.getElementById('detailsModalLabel') ;
-// modalTitle.innerText= `${data.tool_name}`;
-// const modalIntro = document.getElementById('modal-intro');
-// modalIntro.innerText=`${data.description}`;
-// const features1 = document.getElementById('features1');
-// features1.innerText=`${data.features.feature_name}`
-
-
-
-  
-
-}
-
-function showAll(max){
-document.getElementById("show-all-button").classList.add('d-none');
-allcardsData(max)
-}
 
 const toggleSpinner = isLoading => {
-  const spinnerSec = document.getElementById('spinner');
-  if (isLoading) {
-      spinnerSec.classList.add('d-none')
-  }
+    const spinnerSec = document.getElementById('spinner');
+    if (isLoading) {
+        spinnerSec.classList.add('d-none')
+    }
 }
+
+
+document.getElementById('show-more-btn').addEventListener('click', function () {
+    processLoad()
+})
+
+
+const loadToolsDetails = async (id) => {
+    const URL = `https://openapi.programming-hero.com/api/ai/tool/${id}`
+    const res = await fetch(URL);
+    const data = await res.json();
+    displayToolsDetails(data.data)
+}
+
+
+const displayToolsDetails = (tool) => {
+    // console.log(tool)
+    const featuresValues = Object.values(tool.features)
+    let featuresArray = []
+    for (const featuresValue of featuresValues) {
+        featuresArray.push(featuresValue.feature_name)
+    }
+    const accuracyFixer = '% Accuracy';
+    const { description, pricing, image_link, input_output_examples, accuracy, integrations } = tool
+    const toolsModalBody = document.getElementById('tools-motal-body');
+    toolsModalBody.innerHTML = `
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+    <div class="col">
+        <div class="card bg-info border-0 shadow-lg bg-opacity-25 h-100">
+            <div class="card-body p-3">
+                <h5 class="card-title">${description ? description : 'HEllo bro'}</h5>
+                <div class="d-flex justify-content-around gap-2 fw-semibold text-center my-5">
+                    <div class="bg-light rounded p-lg-2"><span class="text-success">${pricing ? pricing[0].price : 'Free of Cost'} <br> ${pricing ? pricing[0].plan : 'Basic'}</span></div>
+                    <div class="bg-light rounded p-lg-2"><span class="text-warning">${pricing ? pricing[1].price : 'Free of Cost'} <br> ${pricing ? pricing[1].plan : 'Pro'}</span></div>
+                    <div class="bg-light rounded p-lg-2"><span class="text-danger">${pricing ? pricing[2].price : 'Free of Cost'} <br> ${pricing ? pricing[2].plan : 'Enterprise'}</span></div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Features</h5>
+                        <ul>${featuresArray.map(list => `<li>${list}</li>`).join('')}</ul>
+                    </div>
+                    <div>
+                        <h5 class="card-title">Integrations</h5>
+                        <ul>${integrations ? integrations.map(list => `<li>${list}</li>`).join('') : 'No data Found'}</ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-center shadow-lg border-0 ">
+            <div><span class="badge text-bg-danger w-30 p-2 position-absolute end-0">${accuracy.score ? accuracy.score * 100 + accuracyFixer : ''}</span>
+            <img src="${image_link[0]}" class="card-img-top" alt=""></div>
+            <div class="card-body my-5">
+                <h5 class="card-title">${input_output_examples ? input_output_examples[0].input : 'Can you give any example?'}</h5>
+                <p class="card-text">${input_output_examples ? input_output_examples[0].output : 'No! Not Yet! Take a break!!!'}</p>
+            </div>
+        </div>
+    </div>
+</div>
+    `
+};
