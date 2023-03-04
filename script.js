@@ -1,30 +1,15 @@
-const loadTools = async (dataLimit) => {
+const apiDataLoad = async (dataLimit) => {
     const URL = 'https://openapi.programming-hero.com/api/ai/tools'
     const res = await fetch(URL);
     const data = await res.json();
-    displayTools(data.data.tools, dataLimit)
+    displayApiDataLoad(data.data.tools, dataLimit)
 }
 
 
-const sortByDate = async (dataLimit) => {
-    const URL = 'https://openapi.programming-hero.com/api/ai/tools'
-    const res = await fetch(URL);
-    const data = await res.json();
-    const sortData = data.data.tools.sort(function (a, b) {
-        return new Date(a.published_in) - new Date(b.published_in)
-    });
-    displayTools(sortData, dataLimit)
-}
 
 
-const processLoad = (dataLimit = 6) => {
-    loadTools(dataLimit)
-    sortByDate(dataLimit)
-}
-
-
-const displayTools = (tools, dataLimit) => {
-    toggleSpinner(true)
+const displayApiDataLoad = (tools, dataLimit) => {
+    Spinner(true)
 
     const showMoreContainer = document.getElementById('show-more')
     if (dataLimit !== 6 && tools.length > 6) {
@@ -35,7 +20,7 @@ const displayTools = (tools, dataLimit) => {
         showMoreContainer.classList.add('d-none')
     }
 
-    const toolsContainer = document.getElementById('tools-container')
+    const toolsContainer = document.getElementById('cards-container')
     toolsContainer.innerHTML = '';
     tools.forEach(tool => {
         // console.log(tool)
@@ -55,7 +40,7 @@ const displayTools = (tools, dataLimit) => {
                             <p class="card-text">${tool.published_in}</p>
                         </div>
                     </div>
-                    <div onclick ="loadToolsDetails('${tool.id}')" style="width: 50px;" data-bs-toggle="modal" data-bs-target="#exampleModal"><img src="deatils-icon.png"</img></div>
+                    <div onclick ="apiDetailsDataLoad('${tool.id}')" style="width: 50px;" data-bs-toggle="modal" data-bs-target="#detailsModal"><img src="deatils-icon.png"</img></div>
                 </div>
             </div>
         </div>
@@ -63,32 +48,31 @@ const displayTools = (tools, dataLimit) => {
         `
     });
 
-    toggleSpinner(false)
+    Spinner(false)
 }
 
 
-const toggleSpinner = isLoading => {
-    const spinnerSec = document.getElementById('spinner');
-    if (isLoading) {
-        spinnerSec.classList.add('d-none')
+const Spinner = loading => {
+    const spinnerSection = document.getElementById('spinner');
+    if (loading) {
+        spinnerSection.classList.add('d-none')
     }
 }
 
 
-document.getElementById('show-more-btn').addEventListener('click', function () {
-    processLoad()
-})
 
 
-const loadToolsDetails = async (id) => {
+
+
+const apiDetailsDataLoad = async (id) => {
     const URL = `https://openapi.programming-hero.com/api/ai/tool/${id}`
     const res = await fetch(URL);
     const data = await res.json();
-    displayToolsDetails(data.data)
+    displayApiDetailsDataLoad(data.data)
 }
 
 
-const displayToolsDetails = (tool) => {
+const displayApiDetailsDataLoad = (tool) => {
     // console.log(tool)
     const featuresValues = Object.values(tool.features)
     let featuresArray = []
@@ -97,7 +81,7 @@ const displayToolsDetails = (tool) => {
     }
     const accuracyFixer = '% Accuracy';
     const { description, pricing, image_link, input_output_examples, accuracy, integrations } = tool
-    const toolsModalBody = document.getElementById('tools-motal-body');
+    const toolsModalBody = document.getElementById('modal-body');
     toolsModalBody.innerHTML = `
     <div class="row row-cols-1 row-cols-md-2 g-4">
     <div class="col">
@@ -136,3 +120,27 @@ const displayToolsDetails = (tool) => {
 </div>
     `
 };
+
+
+const showMoreButton =document.getElementById('btn-show-more');
+showMoreButton.addEventListener('click', function () {
+    processLoad()
+})
+
+
+
+const sortByDate = async (dataLimit) => {
+    const URL = 'https://openapi.programming-hero.com/api/ai/tools'
+    const res = await fetch(URL);
+    const data = await res.json();
+    const sortData = data.data.tools.sort(function (a, b) {
+        return new Date(a.published_in) - new Date(b.published_in)
+    });
+    displayApiDataLoad(sortData, dataLimit)
+}
+
+
+const processLoad = (dataLimit = 6) => {
+    apiDataLoad(dataLimit)
+    sortByDate(dataLimit)
+}
