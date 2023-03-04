@@ -1,5 +1,5 @@
 
-// all cards api
+// all cards api load function
 
 const apiDataLoad = dataLimit => {
     const url = 'https://openapi.programming-hero.com/api/ai/tools'
@@ -9,6 +9,7 @@ const apiDataLoad = dataLimit => {
 
 }
 
+// all cards api data display function
 
 const displayApiDataLoad = (data, dataLimit) => {
     Spinner(true)
@@ -58,6 +59,7 @@ const displayApiDataLoad = (data, dataLimit) => {
     Spinner(false)
 }
 
+// spinner function
 
 const Spinner = loading => {
     const spinnerSection = document.getElementById('spinner');
@@ -69,9 +71,9 @@ const Spinner = loading => {
 
 
 
+// details button api load function
 
-
-const apiDetailsDataLoad = async (id) => {
+const apiDetailsDataLoad =(id) => {
     const url = `https://openapi.programming-hero.com/api/ai/tool/${id}`
     fetch(url)
         .then(res => res.json())
@@ -79,6 +81,7 @@ const apiDetailsDataLoad = async (id) => {
 
 }
 
+// details button api data display function
 
 const displayApiDetailsDataLoad = (modalData) => {
    
@@ -115,6 +118,7 @@ const displayApiDetailsDataLoad = (modalData) => {
             </div>
         </div>
     </div>
+
     <div class="col">
         <div class="card text-center shadow h-100 ">
             <div><span class="badge text-bg-danger w-30 p-2 position-absolute end-0">${accuracy.score ? accuracy.score * 100 + accuracyString : ''}</span>
@@ -135,11 +139,16 @@ showMoreButton.addEventListener('click', function () {
     showAllFunction()
 })
 
+//show more button function
+const showAllFunction = (dataLimit = 6) => {
+    apiDataLoad(dataLimit)
+    sortByDate(dataLimit)
+}
 
-
+// sort by date function
 const sortByDate = async (dataLimit) => {
-    const URL = 'https://openapi.programming-hero.com/api/ai/tools'
-    const res = await fetch(URL);
+    const url = 'https://openapi.programming-hero.com/api/ai/tools'
+    const res = await fetch(url);
     const data = await res.json();
     const sortData = data.data.tools.sort(function (a, b) {
         return new Date(a.published_in) - new Date(b.published_in)
@@ -148,7 +157,3 @@ const sortByDate = async (dataLimit) => {
 }
 
 
-const showAllFunction = (dataLimit = 6) => {
-    apiDataLoad(dataLimit)
-    sortByDate(dataLimit)
-}
