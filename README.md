@@ -5,11 +5,9 @@
 ## Key Features of Our Platform:
 
 -  Complete Vanila JavaScript Project
-
 -  User Can Sort Card By Date
-
+-  Using Loader If Data Fetching Late
 -  Each Card Details Shown By Beautiful Modal
-
 -  Added (Show More) Button
 
 ## Live Link
